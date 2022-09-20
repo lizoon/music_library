@@ -1,0 +1,25 @@
+{% extends 'homepage.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block menu %}
+    {{ super() }}
+{% endblock menu %}
+
+{% block content %}
+    <h3 class="titles" style="margin-top: 70px">
+        Top artists
+    </h3>
+        {% if func(flag) == [] %}
+            <p class="text-danger">Oops..nothing yet</p>
+        {% else %}
+                {% for artist in func(flag) %}
+                    <p class="titles">
+                        <a href="{{ url_for('artist', artist_id=artist.id) }}" class="text">
+                            {{ artist }}
+                        </a>
+                    </p>
+                {% endfor %}
+        {% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'homepage.html' %}
+
+{% block menu %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    {% if songs != [] %}
+        <h3 class="titles" style="margin-top: 70px">Songs</h3>
+        <table class="table table-hover">
+        <tr class="table-dark titles">
+            <td>#</td>
+            <td>Name</td>
+            <td>Artist</td>
+            <td></td>
+            <td></td>
+            <td>🕒</td>
+        </tr>
+        {% for song in songs %}
+            <tr class="table-dark titles">
+            <td>{{ loop.index }}</td>
+            <td>{{ song.name }}</td>
+            <td>
+                <a href="{{ url_for('artist', artist_id=album.query.get(song.album_id).artist_id) }}" class="text">
+                    {{ artist.query.filter(artist.id == album.query.get(song.album_id).artist_id ).first() }}
+                </a>
+            </td>
+                <td>
+                    <a href="{{ url_for('song_add', song_id=song.id, prev='search_res') }}" class="btn btn-secondary">
+                        Like
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ url_for('song_delete', song_id=song.id, prev='search_res') }}" class="btn btn-danger">
+                        Delete
+                    </a>
+                </td>
+            <td>{{ song.duration }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+
+    {% if artists != [] %}
+        <h3 class="titles" style="margin-top: 70px">Artists</h3>
+        <table class="table table-hover">
+        <tr class="table-dark titles t">
+           <td class="t">#</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+       {% for artist in artists %}
+           <tr class="table-dark titles">
+               <td class="t">{{ loop.index }}</td>
+           <td>
+            {% if artist.surname != None %}
+                <a href="{{ url_for('artist', artist_id=artist.id) }}" class="text" >{{ artist.firstname }} {{ artist.surname }}</a>
+            {% else %}
+                <a href="{{ url_for('artist', artist_id=artist.id) }}" class="text">{{ artist.firstname }}</a>
+            {% endif %}
+           </td>
+           <td></td>
+           <td></td>
+           </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+
+
+    {% if albums != [] %}
+        <h3 class="titles" style="margin-top: 70px">Albums</h3>
+        <table class="table table-hover">
+        <tr class="table-dark titles">
+            <td class="t">#</td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% for album in albums %}
+            <tr class="table-dark titles">
+            <td class="t">{{ loop.index }}</td>
+                <td class="t"><img src="{{ album[1] }}" alt="photo" class="album"></td>
+            <td>
+                <a href="{{ url_for('album', album_id=album.id) }}" class="text">{{ album[0] }}
+                </a>
+            </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+
+{% endblock %}
