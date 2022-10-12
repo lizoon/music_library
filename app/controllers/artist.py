@@ -1,7 +1,6 @@
 from app import *
 from app.models.user import *
 from app.models.users_songs import *
-from itertools import groupby
 
 
 @app.route('/artist/<artist_id>')

@@ -4,9 +4,6 @@ from flask import Flask, render_template, \
 from config import Configuration
 from flask_sqlalchemy import SQLAlchemy
 
-from sqlalchemy import MetaData, Column, ForeignKey, Integer, Table, Text, Time, String, Boolean, text, UniqueConstraint,\
-    Numeric, CheckConstraint, DateTime, VARCHAR
-from sqlalchemy.orm import relationship
 
 from flask_admin import Admin, AdminIndexView, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
@@ -66,7 +63,6 @@ from app.controllers import artist
 from app.controllers import genre
 from app.controllers import song
 from app.controllers import user
-from app.controllers import files
 
 
 @app.before_request

@@ -29,11 +29,11 @@ class SignUp(FlaskForm):
 
     nickname = StringField('Nickname',
                            validators=[InputRequired(message='The name must not be empty!'),
-                                       Length(min=4, max=15, message='The length of the name must be between 4 and 15 characters!'),
+                                       Length(min=3, max=15, message='The length of the name must be between 4 and 15 characters!'),
                                        Regexp('[a-z A-Z а-я А-Я 0-9]+', message='The name must contain letters!')])
     password = PasswordField('Password',
                              validators=[InputRequired(message='The password must not be empty!'),
-                                         Length(min=4, max=10, message='The length of the password must be between 4 and 15 characters!')])
+                                         Length(min=3, max=10, message='The length of the password must be between 4 and 15 characters!')])
 
 
 @app.route('/')
@@ -130,56 +130,9 @@ def library():
                            artist=Artist)
 
 
-# @app.route('/profile', methods=['POST', 'GET'])
-# @login_required
-# def profile():
-#     songs = db.session.query(Song).filter(Song.users.any(User.id == current_user.id))
-#     count = songs.count()
-#     return render_template('profile.html',
-#                            title='profile',
-#                            user=current_user,
-#                            count=count,
-#                            songs=songs,
-#                            album=Album,
-#                            artist=Artist,
-#                            func=fav_artist,
-#                            flag=True)
-
-
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))
-
-
-@app.route('/diagram')
-@login_required
-def diagram():
-    user_id = current_user.id
-    songs = db.session.query(Song).filter(Song.users.any(User.id == user_id))
-    albums = []
-    artists = []
-    genres = []
-    for song_ in songs:
-        album_ = (db.session.query(Album).get(song_.album_id))
-        albums.append(album_)
-
-    for album_ in albums:
-        artist_ = db.session.query(Artist).filter(Artist.id == album_.artist_id).first()
-        artists.append(artist_)
-
-    for artist_ in artists:
-        genre_ = db.session.query(Genre).filter(Genre.id == artist_.genre_id).first()
-        genres.append(genre_)
-
-    data1 = {}
-    data1.update({'Genre': 'Number of songs'})
-    for genre_ in genres:
-        count = genres.count(genre_)
-        data1.update({genre_: count})
-
-    return render_template('diagram.html',
-                           title='diagram',
-                           data1=data1)
 
