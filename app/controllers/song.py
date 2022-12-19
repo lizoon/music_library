@@ -1,7 +1,10 @@
+import re
+
 from app import *
 from app.models.user import *
 from app.models.users_songs import *
-
+import os
+import shutil
 
 @app.route('/<prev>/song/<song_id>/add')
 def song_add(song_id, prev):
@@ -62,3 +65,4 @@ def song_delete(song_id, prev):
             return redirect(url_for('library'))
 
     abort(404)
+

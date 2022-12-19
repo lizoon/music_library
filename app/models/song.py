@@ -15,8 +15,9 @@ class Song(db.Model):
 
     id = Column(Integer, primary_key=True, server_default=text("nextval('songs_id_seq'::regclass)"))
     name = Column(String(80), nullable=False)
-    duration = Column(Time, nullable=False)
     album_id = Column(ForeignKey('albums.id', ondelete='CASCADE'), nullable=False)
+    path = Column(String)
+    type = Column(String)
 
     album = relationship('Album')
     users = relationship('User', secondary=t_users_songs)

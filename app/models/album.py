@@ -15,7 +15,7 @@ class Album(db.Model):
     name = Column(String(20), server_default=text("'New Album'::text"))
     release_year = Column(Integer)
     artist_id = Column(ForeignKey('artists.id', ondelete='CASCADE'), nullable=False)
-    cover = Column(String, server_default=text("'/home/liza/PycharmProjects/laba_1/app/static/img/default_.png'::text"))
+    cover = Column(String)
 
     artist = relationship('Artist') # add attrs to models для доступа к данным, (name of responsible class for ONE relation)
 

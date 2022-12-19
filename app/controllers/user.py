@@ -1,3 +1,4 @@
+import app
 from app import *
 from app.models.user import *
 from app.models.users_songs import *
@@ -8,6 +9,7 @@ from app.controllers.artist import *
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length, Regexp
+from flask import send_from_directory
 
 
 class LoginForm(FlaskForm):
@@ -136,3 +138,7 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+
+@app.route('/media/<path:path>')
+def media(path):
+    return send_from_directory(app.config["STORAGE"], path)

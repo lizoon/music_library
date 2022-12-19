@@ -8,7 +8,7 @@
 
 
 {% block content %}
-    <p><img src="../{{ cover[0] }}" alt="photo" class="titles"></p>
+    <p><img src="/media/{{ cover }}" alt="photo" class="titles"></p>
     <h6>playlist</h6>
     <h3 class="titles" style="margin-top: 70px">{{ album }}</h3>
     {% with messages = get_flashed_messages() %}
@@ -24,7 +24,6 @@
     <tr class="table-dark">
         <td>#</td>
         <td>Name</td>
-        <td>🕓</td>
         <td></td>
         <td></td>
     </tr>
@@ -32,7 +31,6 @@
             <tr class="table-dark">
                 <td>{{ loop.index }}</td>
                 <td>{{ song.name }} </td>
-                <td>{{ song.duration }}</td>
                 <td>
                     <a href="{{ url_for('song_add', song_id=song.id, prev='search') }}" class="btn btn-secondary">
                         Like
