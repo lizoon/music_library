@@ -1,39 +1,5 @@
-from app import *
-from app.models.user import *
-from app.models.users_songs import *
-
+from flask_security import SQLAlchemyUserDatastore, Security, logout_user, login_user
 from app.controllers.artist import *
-
-
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField
-from wtforms.validators import InputRequired, Email, Length, Regexp
-
-
-class LoginForm(FlaskForm):
-    nickname = StringField('Nickname', validators=[InputRequired(message='The name must not be empty!'),
-                                                   Length(min=4, max=15,
-                                                          message='The length of the name must be between 4 and 15 characters!')])
-    password = PasswordField('Password', validators=[InputRequired(message='The password must not be empty!'),
-                                             Length(min=4, max=10,
-                                                    message='The length of the password must be between 4 and 15 characters!')])
-    remember = BooleanField('Remember me')
-
-
-class SignUp(FlaskForm):
-    email = StringField('Email',
-                        validators=[Length(max=30, message='Mailbox too long! '),
-                                    Email(message='Mail must be filled!'),
-                                    Regexp('^[a-z A-Z 0-9 ]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
-                                           message='Invalid email!'), ])
-
-    nickname = StringField('Nickname',
-                           validators=[InputRequired(message='The name must not be empty!'),
-                                       Length(min=4, max=15, message='The length of the name must be between 4 and 15 characters!'),
-                                       Regexp('[a-z A-Z а-я А-Я 0-9]+', message='The name must contain letters!')])
-    password = PasswordField('Password',
-                             validators=[InputRequired(message='The password must not be empty!'),
-                                         Length(min=4, max=10, message='The length of the password must be between 4 and 15 characters!')])
 
 
 @app.route('/')
@@ -151,35 +117,3 @@ def library():
 def logout():
     logout_user()
     return redirect(url_for('login'))
-
-
-@app.route('/diagram')
-@login_required
-def diagram():
-    user_id = current_user.id
-    songs = db.session.query(Song).filter(Song.users.any(User.id == user_id))
-    albums = []
-    artists = []
-    genres = []
-    for song_ in songs:
-        album_ = (db.session.query(Album).get(song_.album_id))
-        albums.append(album_)
-
-    for album_ in albums:
-        artist_ = db.session.query(Artist).filter(Artist.id == album_.artist_id).first()
-        artists.append(artist_)
-
-    for artist_ in artists:
-        genre_ = db.session.query(Genre).filter(Genre.id == artist_.genre_id).first()
-        genres.append(genre_)
-
-    data1 = {}
-    data1.update({'Genre': 'Number of songs'})
-    for genre_ in genres:
-        count = genres.count(genre_)
-        data1.update({genre_: count})
-
-    return render_template('diagram.html',
-                           title='diagram',
-                           data1=data1)
-

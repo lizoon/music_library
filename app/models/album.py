@@ -1,3 +1,5 @@
+from sqlalchemy.orm import relationship
+
 from app import *
 
 

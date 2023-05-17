@@ -27,9 +27,6 @@
                             <a class="nav-link" href="/admin">Admin</a>
                         {% endif %}
                     </li>
-{#                    <li class="nav-item">#}
-{#                        <a class="nav-link" href="{{ url_for('diagram') }}">Трошки статистики</a>#}
-{#                    </li>#}
                 </ul>
             </div>
     </div>
@@ -38,9 +35,5 @@
 
 {% block content %}
     <h2 class="titles up">Hi, {{ name }}</h2>
-{#     {% if current_user.has_role('admin') %}#}
-{#        <a href="{{ url_for('export_excel') }}" class="btn btn-primary">Експорт файлу</a>#}
-{#        <a href="{{ url_for('import_excel') }}" class="btn btn-info">Імпорт файлу</a>#}
-{#    {% endif %}#}
 
 {% endblock %}

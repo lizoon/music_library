@@ -1,3 +1,5 @@
+from sqlalchemy.orm import relationship
+
 from app import *
 from flask_security import UserMixin, RoleMixin
 
@@ -22,11 +24,18 @@ class User(db.Model, UserMixin):
 
     id = Column(Integer, primary_key=True, server_default=text("nextval('users_id_seq')"))
     password = Column(String, nullable=False)
-    email = Column(String(60), nullable=False)
+    email = Column(String(60), nullable=False, unique=True)
     nickname = Column(String(20), nullable=False)
     active = Column(Boolean())
 
     roles = relationship('Role', secondary=t_roles_users, backref=db.backref('users', lazy='dynamic'))
 
+    def __init__(self, password, email, nickname, active=True):
+        self.password = password
+        self.email = email
+        self.nickname = nickname
+        self.active = active
+
+
     def __repr__(self):
-        return f'{self.nickname}'
+        return f'<User: {self.email}>'

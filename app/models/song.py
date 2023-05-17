@@ -1,7 +1,7 @@
+from sqlalchemy.orm import relationship
+
 from app import *
-from app.models.album import Album
 from app.models.users_songs import t_users_songs
-from app.models.user import User
 
 
 class Song(db.Model):
