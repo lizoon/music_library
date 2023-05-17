@@ -14,10 +14,6 @@ from datetime import timedelta
 
 from flask_bootstrap import Bootstrap
 
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField
-from wtforms.validators import InputRequired, Email, Length, Regexp
-
 
 def create_app(cfg: Optional[config.Configuration] = None) -> Flask:
     if cfg is None:
@@ -25,18 +21,18 @@ def create_app(cfg: Optional[config.Configuration] = None) -> Flask:
     app = Flask(__name__, template_folder="templates")
     app.config.from_object(cfg)
 
-    db = create_db(app=app)
+    db = create_db(application=app)
     db.init_app(app)
     return app
 
 
-def create_db(app):
-    db = SQLAlchemy(app)
+def create_db(application):
+    db = SQLAlchemy(application)
     # migrate = Migrate(app, db)
     return db
 
 app = create_app()
-db = create_db(app=app)
+db = create_db(application=app)
 
 from app.models.user import User, Role
 from app.models.artist import Artist
@@ -87,31 +83,4 @@ from app.controllers import user
 def make_session_permanent():
     session.permanent = True
     app.permanent_session_lifetime = timedelta(minutes=40)
-
-
-class LoginForm(FlaskForm):
-    nickname = StringField('Nickname', validators=[InputRequired(message='The name must not be empty!'),
-                                                   Length(min=1, max=20,
-                                                          message='The length of the name must be between 4 and 15 characters!')])
-    password = PasswordField('Password', validators=[InputRequired(message='The password must not be empty!'),
-                                             Length(min=1,
-                                                    message='The length of the password must be between 4 and 15 characters!')])
-    remember = BooleanField('Remember me')
-
-
-class SignUp(FlaskForm):
-    email = StringField('Email',
-                        validators=[Length(max=60, message='Mailbox too long! '),
-                                    Email(message='Mail must be filled!'),
-                                    Regexp('^[a-z A-Z 0-9 ]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
-                                           message='Invalid email!'), ])
-
-    nickname = StringField('Nickname',
-                           validators=[InputRequired(message='The name must not be empty!'),
-                                       Length(min=1, max=20, message='The length of the name must be between 4 and 15 characters!'),
-                                       Regexp('[a-z A-Z а-я А-Я 0-9]+', message='The name must contain letters!')])
-    password = PasswordField('Password',
-                             validators=[InputRequired(message='The password must not be empty!'),
-                                         Length(min=1, message='The length of the password must be between 4 and 15 characters!')])
-
 

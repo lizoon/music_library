@@ -1,6 +1,8 @@
 from flask_security import SQLAlchemyUserDatastore, Security, logout_user, login_user
 from app.controllers.artist import *
 
+from app.forms import LoginForm, SignUpForm
+
 
 @app.route('/')
 def main():
@@ -9,7 +11,7 @@ def main():
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
-    form = SignUp()
+    form = SignUpForm()
 
     if current_user.is_authenticated:
         return redirect(url_for('homepage'))
@@ -58,8 +60,13 @@ def search():
     q = request.args.get('q')
     if q:
         songs = db.session.query(Song).filter(Song.name.ilike(('%{0}%').format(q))).all()
-        artists = db.session.query(Artist).filter(Artist.firstname.ilike(('%{0}%').format(q))
-                                                  | Artist.surname.ilike(('%{0}%').format(q))).all()
+        artists = (
+            db.session.query(Artist)
+            .filter(
+                Artist.firstname.ilike(('%{0}%').format(q)) | Artist.surname.ilike(('%{0}%').format(q))
+            )
+            .all()
+        )
         albums = db.session.query(Album).filter(Album.name.ilike(('%{0}%').format(q))).all()
         if albums != []:
             count = 0

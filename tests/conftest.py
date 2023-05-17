@@ -3,18 +3,47 @@ import datetime
 import pytest
 from app import create_app, db, User, Genre, Album, Artist, Song
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
+from sqlalchemy.orm.session import Session
+
+def pytest_sessionstart(session):
+    # Since flask_sqlalchemy.SQLAlchemy uses hardcoded config keys, we have no choice but to override
+    # SQLALCHEMY_DATABASE_URI with a test DB URI
+    from app.config import Configuration
+    Configuration.SQLALCHEMY_DATABASE_URI = Configuration.SQLALCHEMY_TEST_DATABASE_URI
 
 
-@pytest.fixture()
-def test_client():
+@pytest.fixture(autouse=True)
+def flask_client():
     """An application for the tests"""
-    app = create_app()
+    from app import app
     app.config["TESTING"] = True
-    with app.test_client() as client:
-        yield client
+    yield app
+
+
+@pytest.yield_fixture(scope="function", autouse=True)
+def init_db():
+    from app import app, db
+
+    Session = sessionmaker(bind=db.engine)
+    session = Session()
+
+    db.create_all("__all__", app)
+
+    try:
+        session.begin()
+        yield session
+        session.rollback()
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.close()
+
+    db.drop_all()
 
 @pytest.fixture()
-def init_session(test_client):
+def init_session():
     Session = sessionmaker()
     session = Session()
     yield session
@@ -22,7 +51,7 @@ def init_session(test_client):
 
 
 @pytest.fixture()
-def init_objects(test_client, valid_user, valid_genre, valid_album, valid_artist, valid_song):
+def init_objects(flask_client, valid_user, valid_genre, valid_album, valid_artist, valid_song):
     Session = sessionmaker()
     session = Session()
     db.session.add(valid_user)
@@ -46,12 +75,6 @@ def valid_user():
     yield User(password='testtest',
                email='test2@gmail.com',
                nickname='test2')
-
-@pytest.fixture()
-def invalid_user():
-    yield User(password='',
-               email='test.gmail.com',
-               nickname='bigbigbigbigbigbigbigbigbigbigbigbigbigbigbigbigbigbigbigbigbig')
 
 
 @pytest.fixture()

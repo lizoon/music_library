@@ -59,6 +59,7 @@ def test_update_user(valid_user):
     db.session.delete(valid_user)
     db.session.commit()
 
+
 def test_delete_user(valid_user):
     db.session.add(valid_user)
     db.session.commit()
@@ -69,15 +70,16 @@ def test_delete_user(valid_user):
     assert q is None
 
 
-
-def test_invalid_user(invalid_user):
+def test_invalid_user():
     with pytest.raises(Exception):
-        try:
-            db.session.add(invalid_user)
-            db.session.commit()
-        except Exception:
-            db.session.rollback()
-            raise
+        invalid_user = User(
+            password='',
+            email='test.gmail.com',
+            nickname='bigbigbigbigbigbigbigbigbigbigbigbigbigbigbigbigbigbigbigbigbig',
+        )
+        db.session.add(invalid_user)
+        db.session.commit()
+
 
 def test_valid_user(valid_user):
     db.session.add(valid_user)

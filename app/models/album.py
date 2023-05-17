@@ -30,7 +30,8 @@ class Album(db.Model):
                 'release_year': self.release_year,
                 'artist_id': self.artist_id}
 
-    def get_album(self, id_):
+    @classmethod
+    def get_album(cls, id_):
         return [Album.json(db.session.query(Album).filter(Album.id == id_).first())]
 
     def add_album(self, name, release_year, artist_id):
@@ -48,6 +49,7 @@ class Album(db.Model):
         album_to_update.artist_id = artist_id
         db.session.commit()
 
-    def delete_album(self, id_):
+    @classmethod
+    def delete_album(cls, id_):
         db.session.query(Album).filter(Album.id == id_).delete()
         db.session.commit()
