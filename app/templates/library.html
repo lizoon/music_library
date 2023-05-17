@@ -26,16 +26,17 @@
       <th scope="row">#</th>
         <td>Name</td>
         <td></td>
+        <td></td>
         <td>Album</td>
         <td>Artist</td>
         <td></td>
-        <td>🕓</td>
     </tr>
     {% for song in songs %}
         <tr class="table-dark">
         <th>{{ loop.index }}</th>
         <td>{{ song.name }} </td>
-            <td><img src="{{ album.query.get(song.album_id).cover }}" alt="photo" class="album"></td>
+        <td><audio controls="controls"><source src="media/mp3/{{ song.path }}" type="audio/mpeg" /></audio></td>
+        <td><img src="media/{{ album.query.get(song.album_id).cover }}" alt="photo" class="album"></td>
         <td>
         <a href="{{ url_for('album', album_id=song.album_id) }}" class="text">
             {{ album.query.get(song.album_id).name }}
@@ -50,9 +51,6 @@
             <a href="{{ url_for('song_delete', song_id=song.id, prev='library') }}" class="btn btn-danger">
                 Delete
             </a>
-        <td>
-            {{ song.duration }}
-        </td>
         </tr>
     {% endfor %}
     </table>
