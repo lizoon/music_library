@@ -88,7 +88,7 @@ def search():
 @login_required
 def library():
     user_id = current_user.id
-    songs = db.session.query(Song).filter(Song.users.any(User.id == user_id))
+    songs = db.session.query(Song).filter(Song.users.any(Song.id == user_id))
     return render_template('library.html',
                            title='library',
                            songs=songs,

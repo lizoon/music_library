@@ -42,7 +42,7 @@ class Artist(db.Model):
     def add_artist(firstname, surname, genre_id):
         new_artist = Artist()
         new_artist.firstname = firstname
-        if surname is not "":
+        if surname != "":
             new_artist.surname = surname
         new_artist.genre_id = genre_id
         db.session.add(new_artist)
@@ -51,7 +51,7 @@ class Artist(db.Model):
     def update_artist(id_, firstname, surname, genre_id):
         artist_to_update = db.session.query(Artist).filter(Artist.id == id_).first()
         artist_to_update.firstname = firstname
-        if surname is not "":
+        if surname != "":
             artist_to_update.surname = surname
         artist_to_update.artist_id = genre_id
         db.session.commit()

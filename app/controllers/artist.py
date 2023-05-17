@@ -27,7 +27,7 @@ def artists():
 
 def fav_artist(flag):
     user_id = current_user.id
-    songs = db.session.query(Song).filter(Song.users.any(User.id == user_id))
+    songs = db.session.query(Song).filter(Song.users.any(Song.id == user_id))
     albums = []
     artists = []
     for song_ in songs:

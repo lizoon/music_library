@@ -8,7 +8,7 @@ def song_add(song_id, prev):
     song = Song.query.get(song_id)
 
     if song:
-        songs = db.session.query(Song).filter(Song.users.any(User.id == current_user.id))
+        songs = db.session.query(Song).filter(Song.users.any(Song.id == current_user.id))
 
         if song in songs:
             flash('This song is already added')
@@ -37,7 +37,7 @@ def song_delete(song_id, prev):
     song = db.session.query(Song).get(song_id)
 
     if song:
-        songs = db.session.query(Song).filter(Song.users.any(User.id == current_user.id))
+        songs = db.session.query(Song).filter(Song.users.any(Song.id == current_user.id))
 
         if song not in songs:
             flash('There is no such song!')

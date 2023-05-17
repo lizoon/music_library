@@ -30,10 +30,10 @@ class Album(db.Model):
                 'release_year': self.release_year,
                 'artist_id': self.artist_id}
 
-    def get_album(id_):
+    def get_album(self, id_):
         return [Album.json(db.session.query(Album).filter(Album.id == id_).first())]
 
-    def add_album(name, release_year, artist_id):
+    def add_album(self, name, release_year, artist_id):
         new_genre = Album()
         new_genre.name = name
         new_genre.release_year = release_year
@@ -41,13 +41,13 @@ class Album(db.Model):
         db.session.add(new_genre)
         db.session.commit()
 
-    def update_album(id_, name, release_year, artist_id):
+    def update_album(self, id_, name, release_year, artist_id):
         album_to_update = db.session.query(Album).filter(Album.id == id_).first()
         album_to_update.name = name
         album_to_update.release_year = release_year
         album_to_update.artist_id = artist_id
         db.session.commit()
 
-    def delete_album(id_):
+    def delete_album(self, id_):
         db.session.query(Album).filter(Album.id == id_).delete()
         db.session.commit()

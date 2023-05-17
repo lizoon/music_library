@@ -23,20 +23,17 @@ def test_user_attrs(valid_user):
     assert isinstance(valid_user.active, bool)
 
 
-def test_create_user():
-    user = User(password='testtest',
-                email='test2@gmail.com',
-                nickname='test2')
-    assert user.password == 'testtest'
-    assert user.email == 'test2@gmail.com'
-    assert user.nickname == 'test2'
-    assert user.is_authenticated
-    assert user.is_active
-    assert not user.is_anonymous
-    db.session.add(user)
+def test_create_user(valid_user):
+    assert valid_user.password == 'testtest'
+    assert valid_user.email == 'test2@gmail.com'
+    assert valid_user.nickname == 'test2'
+    assert valid_user.is_authenticated
+    assert valid_user.is_active
+    assert not valid_user.is_anonymous
+    db.session.add(valid_user)
     db.session.commit()
-    assert user.id is not None
-    db.session.delete(user)
+    assert valid_user.id is not None
+    db.session.delete(valid_user)
     db.session.commit()
 
 
@@ -73,7 +70,7 @@ def test_delete_user(valid_user):
 
 
 
-def test_invalid(invalid_user):
+def test_invalid_user(invalid_user):
     with pytest.raises(Exception):
         try:
             db.session.add(invalid_user)
@@ -82,7 +79,7 @@ def test_invalid(invalid_user):
             db.session.rollback()
             raise
 
-def test_valid_attrs_user(valid_user):
+def test_valid_user(valid_user):
     db.session.add(valid_user)
     db.session.commit()
     assert valid_user.id is not None

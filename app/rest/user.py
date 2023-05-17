@@ -13,7 +13,7 @@ def get_users():
 @app.route('/users/<id>', methods=['GET'])
 def get_user(id):
     try:
-        return_value = User.get_user(id)
+        return_value = Song.get_user(id)
         return jsonify(return_value)
     except Exception:
         return jsonify({"status": "Error", "description": "No user"})
@@ -23,10 +23,10 @@ def get_user(id):
 def add_user():
     try:
         request_data = request.get_json()
-        User.add_user(request_data['nickname'],
-                  request_data['email'],
-                  request_data['password'],
-                  request_data['active'])
+        Song.add_user(request_data['nickname'],
+                      request_data['email'],
+                      request_data['password'],
+                      request_data['active'])
         response = Response("Ok. User added", 201, mimetype='application/json')
         return response
     except Exception:
@@ -37,10 +37,10 @@ def add_user():
 def update_user(id):
     try:
         request_data = request.get_json()
-        User.update_user(id, request_data['nickname'],
-                        request_data['email'],
-                        request_data['password'],
-                        request_data['active'])
+        Song.update_user(id, request_data['nickname'],
+                         request_data['email'],
+                         request_data['password'],
+                         request_data['active'])
         response = Response("Ok. User updated", 200, mimetype='application/json')
         return response
     except Exception:
@@ -51,7 +51,7 @@ def update_user(id):
 @app.route('/users/<id>', methods=['DELETE'])
 def delete_user(id):
     try:
-        User.delete_user(id)
+        Song.delete_user(id)
         response = Response("Ok. User deleted", 200, mimetype='application/json')
         return response
     except Exception:
