@@ -3,6 +3,8 @@ import datetime
 import pytest
 from app.models.song import Song
 from app.models.album import Album
+from app.models.user import User
+from app.models.users_songs import t_users_songs
 
 
 def test_song_attrs(init_test_data, session):
@@ -98,5 +100,26 @@ def test_valid_song(init_test_data, session):
     assert new_song.name == 'NewSong'
     assert new_song.duration == datetime.time(0,3,20)
 
+
+def test_song_album_relation(init_test_data, session):
+    song = session.query(Song).first()
+    assert song.id is not None
+    album = session.query(Album).first()
+    assert album.id is not None
+    assert song.album == album
+    assert song.album_id == album.id
+
+def test_song_user_relation(init_test_data, session):
+    song = session.query(Song).first()
+    assert song.id is not None
+
+    user = User(password='testtest', email='test2@gmail.com', nickname='test2')
+    session.add(user)
+    session.commit()
+    assert user.id is not None
+
+    session.execute(t_users_songs.insert().values(user_id=user.id, song_id=song.id))
+    session.commit()
+    assert song.users == [user]
 
 

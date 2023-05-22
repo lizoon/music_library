@@ -8,9 +8,6 @@ from app.models.users_songs import t_users_songs
 class Song(db.Model):
 
     __tablename__ = 'songs'
-    # __table_args__ = (
-    #     CheckConstraint('(release_year >= (1800)::numeric) AND (release_year <= (2022)::numeric)'),
-    # )
 
     id = Column(Integer, Sequence("albums_id_seq"), primary_key=True)
     name = Column(String(80), nullable=False)

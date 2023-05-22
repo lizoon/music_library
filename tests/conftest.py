@@ -80,13 +80,7 @@ def init_test_data(user_datastore, session):
 
     yield session
 
-    # user_datastore.delete_user(valid_user)
-    # session.delete(valid_genre)
-    # session.delete(valid_album)
-    # session.delete(valid_artist)
-    # session.delete(valid_song)
-    # session.commit()
-    # session.close()
+    session.close()
 
 
 @pytest.fixture()
