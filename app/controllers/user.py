@@ -1,5 +1,32 @@
-from flask_security import SQLAlchemyUserDatastore, Security, logout_user, login_user
+from flask_security import Security, SQLAlchemyUserDatastore, logout_user, login_user
 from app.controllers.artist import *
+
+
+class LoginForm(FlaskForm):
+    nickname = StringField('Nickname', validators=[InputRequired(message='The name must not be empty!'),
+                                                   Length(min=1, max=20,
+                                                          message='The length of the name must be between 4 and 15 characters!')])
+    password = PasswordField('Password', validators=[InputRequired(message='The password must not be empty!'),
+                                             Length(min=1,
+                                                    message='The length of the password must be between 4 and 15 characters!')])
+    remember = BooleanField('Remember me')
+
+
+class SignUp(FlaskForm):
+    email = StringField('Email',
+                        validators=[Length(max=60, message='Mailbox too long! '),
+                                    Email(message='Mail must be filled!'),
+                                    Regexp('^[a-z A-Z 0-9 ]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
+                                           message='Invalid email!'), ])
+
+    nickname = StringField('Nickname',
+                           validators=[InputRequired(message='The name must not be empty!'),
+                                       Length(min=1, max=20, message='The length of the name must be between 4 and 15 characters!'),
+                                       Regexp('[a-z A-Z а-я А-Я 0-9]+', message='The name must contain letters!')])
+    password = PasswordField('Password',
+                             validators=[InputRequired(message='The password must not be empty!'),
+                                         Length(min=1, message='The length of the password must be between 4 and 15 characters!')])
+
 
 
 @app.route('/')
@@ -88,28 +115,13 @@ def search():
 @login_required
 def library():
     user_id = current_user.id
-    songs = db.session.query(Song).filter(Song.users.any(Song.id == user_id))
+    songs = db.session.query(Song).filter(Song.users.any(User.id == user_id))
     return render_template('library.html',
                            title='library',
                            songs=songs,
                            album=Album,
                            artist=Artist)
 
-
-# @app.route('/profile', methods=['POST', 'GET'])
-# @login_required
-# def profile():
-#     songs = db.session.query(Song).filter(Song.users.any(User.id == current_user.id))
-#     count = songs.count()
-#     return render_template('profile.html',
-#                            title='profile',
-#                            user=current_user,
-#                            count=count,
-#                            songs=songs,
-#                            album=Album,
-#                            artist=Artist,
-#                            func=fav_artist,
-#                            flag=True)
 
 
 @app.route('/logout')

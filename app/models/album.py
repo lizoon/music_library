@@ -2,7 +2,7 @@ from sqlalchemy.orm import relationship
 
 from app import *
 
-from sqlalchemy import Column, ForeignKey, Integer, String, text
+from sqlalchemy import Column, ForeignKey, Integer, String, text, Sequence
 from sqlalchemy.orm import relationship
 
 
@@ -13,7 +13,7 @@ def get_all_albums():
 class Album(db.Model):
     __tablename__ = 'albums'
 
-    id = Column(Integer, primary_key=True, server_default=text("nextval('albums_id_seq')"))
+    id = Column(Integer, Sequence("albums_id_seq"), primary_key=True)
     name = Column(String(20), server_default=text("'New Album'::text"))
     release_year = Column(Integer)
     artist_id = Column(ForeignKey('artists.id', ondelete='CASCADE'), nullable=False)
